@@ -44,6 +44,9 @@ jobs:
       - name: Flutter Build
         run: flutter build -v ${{ matrix.build_target }}
 
+      - run: ls -R -l --hide={android,ios,build/kotlin,build/test_cache,build/unit_test_assets}
+        if: always()
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
@@ -69,6 +72,9 @@ jobs:
         with:
           name: ios-build
       - run: ls -R -l --hide={android,ios}
+        if: always()
+
+      - run: exit 1
 
       # TODO: Apparently node is already installed in the macos-11 machine?
       - uses: actions/setup-node@v2
