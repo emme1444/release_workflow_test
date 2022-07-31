@@ -27,7 +27,7 @@ jobs:
         with:
           java-version: "12.x"
 
-      - uses: subsito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           # flutter-version: "3"
           channel: stable
