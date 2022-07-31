@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build for ${{ matrix.target }}
     runs-on: macos-11
-    if: github.head_ref == "main"
+    if: github.head_ref == 'main'
     strategy:
       fail-fast: false
       matrix:
@@ -23,7 +23,7 @@ jobs:
             build_output: build/app/outputs/bundle/release/app-release.app
     steps:
       - uses: actions/setup-java@v1
-        if: matrix.target == "android"
+        if: matrix.target == 'android'
         with:
           java-version: "12.x"
 
@@ -54,7 +54,7 @@ jobs:
     name: Release
     runs-on: macos-11
     needs: build
-    if: github.head_ref == "main"
+    if: github.head_ref == 'main'
     steps:
       # NOTE: I'm checking out the repo because semantic-release needs to be
       #       able to go through the git history to determine the next version.
