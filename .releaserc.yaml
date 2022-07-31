@@ -1,0 +1,24 @@
+branches:
+  - stable
+  # - main
+
+#// TODO: UPDATE!
+repositoryUrl: https://github.com/emme1444/release_workflow_test
+
+plugins:
+  - - "@semantic-release/commit-analyzer"
+    - preset: conventionalcommits
+  - - "@semantic-release/release-notes-generator"
+    - preset: conventionalcommits
+  - "@semantic-release/changelog"
+  - semantic-release-flutter
+  - "@semantic-release/github"
+  # - - "@semantic-release/github"
+  #   - assets:
+  #       - path: build/app/outputs/bundle/release/app-release.aab
+  #         name: web-schedule-v${nextRelease.gitTag}.aab
+  #       - path: build/app/outputs/flutter-apk/app-release.apk
+  #         name: web-schedule-v${nextRelease.gitTag}.apk
+  #         #// TODO: find path of iOS build
+  #       - path: build/app/outputs/bundle/release/app-release.app
+  #         name: web-schedule-${nextRelease.gitTag}.app

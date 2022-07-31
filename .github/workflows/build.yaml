@@ -1,0 +1,19 @@
+# TODO: I want to see what happens if this fails against a PR?
+
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - stable
+
+jobs:
+  build:
+    name: Build
+    run-on: macos-11
+    steps:
+      - run: echo Build successful!

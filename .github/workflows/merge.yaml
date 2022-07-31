@@ -1,0 +1,13 @@
+name: Merge stable into main
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    name: Publish
+    # TODO: Should this run in a matrix? Can it?
+    steps:
+      - run: echo Merging stable release v${{ github.event.release.tab_name }} into main

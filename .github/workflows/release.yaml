@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - stable
+
+jobs:
+  build:
+    name: Build for ${{ matrix.target }}
+    runs-on: macos-11
+    if: github.head_ref == "main"
+    strategy:
+      fail-fast: false
+      matrix:
+        # build_target: ["apk", "ios --no-codesign"]
+        include:
+          - target: android
+            build_target: apk
+            build_output: build/app/outputs/flutter-apk/app-release.apk
+          - target: ios
+            build_target: ios --no-codesign
+            build_output: build/app/outputs/bundle/release/app-release.app
+    steps:
+      - uses: actions/setup-java@v1
+        if: matrix.target == "android"
+        with:
+          java-version: "12.x"
+
+      - uses: subsito/flutter-action@v2
+        with:
+          # flutter-version: "3"
+          channel: stable
+      - run: flutter doctor -v
+
+      - uses: actions/checkout@v2
+        # with:
+        #   fetch-depth: 0
+      - run: flutter pub get -v
+
+      # TODO: Check if the macOS image includes xCode already set up
+
+      # TODO: Run `flutter build`
+      - name: Flutter Build
+        run: flutter build -v ${{ matrix.build_target }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}-build
+          path: ${{ matrix.build_output }}
+
+  release:
+    name: Release
+    runs-on: macos-11
+    needs: build
+    if: github.head_ref == "main"
+    steps:
+      # NOTE: I'm checking out the repo because semantic-release needs to be
+      #       able to go through the git history to determine the next version.
+      - uses: actions/checkout@v2
+
+      - name: Download android build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: android-build
+      - name: Download ios build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ios-build
+      - run: ls -R -l --hide={android,ios}
+
+      # TODO: Apparently node is already installed in the macos-11 machine?
+      - uses: actions/setup-node@v2
+        with:
+          # node-version: "14"
+          node-version: "16"
+      - name: Install semantic-release dependencies
+        run: npm install -g @semantic-release/changelog@~6.0.1 @semantic-release/git@~10.0.1 semantic-release-flutter@1.0.1 conventional-changelog-conventionalcommits@~5.0.0
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # TODO: What happens when semantic-release here fails?
+        run: |
+          export NODE_PATH="$(npm root -g)"
+          npx semantic-release@~19.0.3 -d
+
+      # TODO: I think this needs to happen because of 1) the version change in
+      #       pubspec.yaml and 2) the CHANGELOG.md file that sem-rel creates.
+      # TODO: Could this be moved to its own workflow that responds to release event?
+      # - name: Merge stable back into main
+      #   if: semantic-release created a release
+      #   run: echo Merging stable back into main
