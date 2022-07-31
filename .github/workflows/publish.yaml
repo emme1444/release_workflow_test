@@ -8,6 +8,7 @@ on:
 jobs:
   publish:
     name: Publish
+    runs-on: macos-11
     # TODO: Should this run in a matrix? Can it?
     steps:
       - run: echo Publishing v${{ github.event.release.tab_name }}
