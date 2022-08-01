@@ -34,7 +34,8 @@ jobs:
             # build_target: ipa --no-codesign --obfuscate
             # build_target: ios --no-codesign
             # TODO: add --obfuscate (and --split-debug-info? do I need this in release?)
-            build_target: ipa --no-codesign
+            # build_target: ipa --no-codesign
+            build_target: ipa
             # build_output: build/app/outputs/bundle/release/app-release.app
             build_output: build/ios/ipa/app-release.ipa
             artifact_name: ios-ipa
