@@ -9,8 +9,8 @@ on:
       - stable
 
 jobs:
-  test:
-    name: Test
+  call_test:
+    name: Call Test
     # runs-on: macos-11
     uses: ./.github/workflows/reusable-test.yaml
 
@@ -57,7 +57,8 @@ jobs:
       - name: Flutter Build
         run: flutter build -v ${{ matrix.build_target }}
 
-      - run: ls -R -l --hide={android,ios,build/kotlin,build/test_cache,build/unit_test_assets}
+      # - run: ls -R -l --hide={android,ios,build/kotlin,build/test_cache,build/unit_test_assets}
+      - run: ls -Rl
         if: always()
 
       - name: Upload build artifact
@@ -84,7 +85,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ios-build
-      - run: ls -R -l --hide={android,ios}
+      - run: ls -Rl
         if: always()
 
       - run: exit 1
