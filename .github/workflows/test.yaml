@@ -9,11 +9,13 @@ on:
   pull_request:
     branches:
       - main
-      - stable
+      # - stable
 
 jobs:
-  test:
-    name: Test
-    runs-on: macos-11
-    steps:
-      - run: echo All tests passed!
+  call_test:
+    name: Call Test
+    # runs-on: macos-11
+    # if: github.head_ref != 'main'
+    uses: ./.github/workflows/reusable-test.yaml
+    # steps:
+    #   - run: echo All tests passed!

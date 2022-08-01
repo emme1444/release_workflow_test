@@ -1,26 +1,39 @@
 name: Release
 
 on:
-  pull_request:
+  # pull_request:
+  #   branches:
+  #     - stable
+  push:
     branches:
       - stable
 
 jobs:
+  test:
+    name: Test
+    # runs-on: macos-11
+    uses: ./.github/workflows/reusable-test.yaml
+
   build:
     name: Build for ${{ matrix.target }}
     runs-on: macos-11
-    if: github.head_ref == 'main'
+    needs: test
+    # if: github.head_ref == 'main'
     strategy:
       fail-fast: false
       matrix:
-        # build_target: ["apk", "ios --no-codesign"]
         include:
           - target: android
             build_target: apk
             build_output: build/app/outputs/flutter-apk/app-release.apk
+            artifact_name: android-apk
           - target: ios
+            # TODO: I don't think ipa allows disabling codesign?
+            # TODO: I'm pretty sure though that this should be ipa
+            # build_target: ipa --no-codesign --obfuscate
             build_target: ios --no-codesign
             build_output: build/app/outputs/bundle/release/app-release.app
+            artifact_name: ios-ipa
     steps:
       - uses: actions/setup-java@v1
         if: matrix.target == 'android'
@@ -57,7 +70,7 @@ jobs:
     name: Release
     runs-on: macos-11
     needs: build
-    if: github.head_ref == 'main'
+    # if: github.head_ref == 'main'
     steps:
       # NOTE: I'm checking out the repo because semantic-release needs to be
       #       able to go through the git history to determine the next version.
