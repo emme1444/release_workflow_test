@@ -24,6 +24,7 @@ jobs:
       matrix:
         include:
           - target: android
+            # TODO: This should be aab
             build_target: apk
             build_output: build/app/outputs/flutter-apk/app-release.apk
             artifact_name: android-apk
@@ -31,8 +32,11 @@ jobs:
             # TODO: I don't think ipa allows disabling codesign?
             # TODO: I'm pretty sure though that this should be ipa
             # build_target: ipa --no-codesign --obfuscate
-            build_target: ios --no-codesign
-            build_output: build/app/outputs/bundle/release/app-release.app
+            # build_target: ios --no-codesign
+            # TODO: add --obfuscate (and --split-debug-info? do I need this in release?)
+            build_target: ipa --no-codesign
+            # build_output: build/app/outputs/bundle/release/app-release.app
+            build_output: build/ios/ipa/app-release.ipa
             artifact_name: ios-ipa
     steps:
       - uses: actions/setup-java@v1

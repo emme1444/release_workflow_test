@@ -18,9 +18,13 @@ plugins:
         # - path: build/app/outputs/bundle/release/app-release.aab
         #   name: web-schedule-v${nextRelease.gitTag}.aab
         # - path: build/app/outputs/flutter-apk/app-release.apk
+        # TODO: This should be aab
         - path: app-release.apk
           name: release_workflow_test_${nextRelease.gitTag}.apk
           #// TODO: find path of iOS build
         # - path: build/app/outputs/bundle/release/app-release.app
-        - path: app-release.app
-          name: release_workflow_test_${nextRelease.gitTag}.app
+        #
+        # - path: app-release.app
+        #   name: release_workflow_test_${nextRelease.gitTag}.app
+        - path: app-release.ipa
+          name: release_workflow_test_${nextRelease.gitTag}.ipa
