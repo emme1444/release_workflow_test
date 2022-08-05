@@ -8,19 +8,18 @@ jobs:
   #       without code-signing and all that stuff. Just to verify that
   #       the push or pr is buildable.
   build:
-    # name: Build ${{ matrix.name }}
-    name: Build
+    name: Build ${{ matrix.name }}
     # TODO: This should run in a matrix
     runs-on: macos-11
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     includes:
-    #       - name: Android
-    #         target: android
-    #         build_target: appbundle
-    #       - name: iOS
-    #         target: ios
-    #         build_target: ios
+    strategy:
+      fail-fast: false
+      matrix:
+        includes:
+          - name: Android
+            target: android
+            build_target: appbundle
+          - name: iOS
+            target: ios
+            build_target: ios --no-codesign
     steps:
       - run: echo Building

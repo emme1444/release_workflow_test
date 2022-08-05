@@ -8,10 +8,8 @@ on:
 jobs:
   test:
     name: Test
-    # TODO: CHANGE (remove redesign)
     uses: ./.github/workflows/callable-test.yaml
 
   build:
     name: Build
-    # TODO: CHANGE (remove redesign)
     uses: ./.github/workflows/callable-build.yaml

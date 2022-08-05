@@ -6,14 +6,11 @@ on:
 
 jobs:
   check-release:
-    # The idea here is to check for if there is about to create a release
     name: Check if Release
     # TODO: This could run on Linux maybe?
     runs-on: macos-11
     outputs:
-      # should-release:
-      #   description: See semantic-release action (./.github/actions/semantic-release).
-      #   value: ${{ steps.run-semantic-release.outputs.should-release }}
+      # See semantic-release action (/.github/actions/semantic-release).
       should-release: ${{ steps.run-semantic-release.outputs.should-release }}
     steps:
       - uses: actions/checkout@v2
@@ -25,33 +22,25 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pre-build: true
-      - run: echo "${{ steps.run-semantic-release.outputs.should-release }}"
   build:
-    # name: Build Release for ${{ matrix.name }}
-    name: Build Release
+    name: Build Release for ${{ matrix.name }}
     needs:
       - check-release
-    # if: jobs.check-release.steps.check.outputs.should-release
-    # if: jobs.check-release.outputs.should-release
     if: needs.check-release.outputs.should-release == 'true'
-    # TODO: This should run in a matrix
-    runs-on: macos-11
-    # strategy:
-    #   matrix:
-    #     includes:
-    #       - name: Android
-    #         target: android
-    #         # TODO: This might need a different command since release build
-    #         build_target: appbundle
-    #       - name: iOS
-    #         target: ios
-    #         # TODO: This might need a different command since release build
-    #         build_target: ios
+    strategy:
+      fail-fast: false
+      matrix:
+        includes:
+          - name: Android
+            target: android
+            # TODO: This might need a different command since release build
+            build_target: appbundle
+          - name: iOS
+            target: ios
+            # TODO: This might need a different command since release build
+            build_target: ios
     steps:
       - run: echo Building for release.
-      - run: echo "${{needs.check-release.outputs.should-release}}"
-      # TODO: Skip this for now but still run the job so we know that the if expression works
-      - run: exit 1
       # 1. if 'android' setup java
       # 2. setup flutter
       # 3. setup node
@@ -65,17 +54,6 @@ jobs:
     name: Release
     needs:
       - build
-    # if: jobs.build.output.should_release
-    # if: jobs.check_release.steps.<step-id>.output.should_release
-    # TODO: I wonder if because this depends on build if build is skipped this
-    #       is also automatically skipped without the below check?
-    # if: jobs.check-release.steps.check.outputs.should-release
-    # if: jobs.check-release.outputs.should-release
-    # TODO: For the below to work this also needs to depend on check-release
-    # if: needs.check-release.outputs.should-release
-    # if: needs.check-release.outputs.should-release == 'true'
     runs-on: macos-11
     steps:
       - run: echo Releasing
-      # TODO: Skip this for now but still run the job so we know that the if expression works
-      - run: exit 1
