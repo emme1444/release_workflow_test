@@ -33,7 +33,7 @@ jobs:
       - check-release
     # if: jobs.check-release.steps.check.outputs.should-release
     # if: jobs.check-release.outputs.should-release
-    if: needs.check-release.outputs.should-release
+    if: needs.check-release.outputs.should-release == 'true'
     # TODO: This should run in a matrix
     runs-on: macos-11
     # strategy:
@@ -73,6 +73,7 @@ jobs:
     # if: jobs.check-release.outputs.should-release
     # TODO: For the below to work this also needs to depend on check-release
     # if: needs.check-release.outputs.should-release
+    # if: needs.check-release.outputs.should-release == 'true'
     runs-on: macos-11
     steps:
       - run: echo Releasing
