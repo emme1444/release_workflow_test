@@ -61,8 +61,6 @@ runs:
       if: inputs.pre-build
       shell: bash
       run: npm install -g semantic-release-flutter@${{ inputs.flutter-version }}
-    - shell: bash
-      run: export NODE_PATH="$(npm root -g)"
     - name: Create release
       if: "!inputs.pre-build"
       env:
@@ -70,7 +68,9 @@ runs:
         GITHUB_TOKEN: ${{ inputs.token }}
       shell: bash
       # TODO: Remove the dry-run flag here!
-      run: npx semantic-release@${{ inputs.semantic-release-version }} -d
+      run: |
+        export NODE_PATH="$(npm root -g)"
+        npx semantic-release@${{ inputs.semantic-release-version }} -d
     - name: Backup pubspec.yaml
       if: inputs.pre-build
       shell: bash
@@ -78,7 +78,9 @@ runs:
     - name: Check release
       if: inputs.pre-build
       shell: bash
-      run: npx semantic-release@${{ inputs.semantic-release-version }} --plugins="@semantic-release/commit-analyzer,semantic-release-flutter"
+      run: |
+        export NODE_PATH="$(npm root -g)"
+        npx semantic-release@${{ inputs.semantic-release-version }} --plugins="@semantic-release/commit-analyzer,semantic-release-flutter"
     - id: check
       if: inputs.pre-build
       shell: bash
