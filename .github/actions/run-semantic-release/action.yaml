@@ -85,4 +85,7 @@ runs:
       if: inputs.pre-build
       shell: bash
       # run: node tool/did-create-release.js
-      run: echo "::set-output name=should-release::$(node tool/did-create-release.js)"
+      run: |
+        export CHECK_RESULT=$(node tool/did-create-release.js)
+        # echo "::set-output name=should-release::$(node tool/did-create-release.js)"
+        echo "::set-output name=should-release::$CHECK_RESULT"
