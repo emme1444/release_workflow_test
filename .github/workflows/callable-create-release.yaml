@@ -23,8 +23,9 @@ jobs:
         # TODO: change this path!
         uses: ./.github/actions/run-semantic-release
         with:
-          pre-build: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          pre-build: true
+      - run: echo "${{ steps.run-semantic-release.outputs.should-release }}"
   build:
     # name: Build Release for ${{ matrix.name }}
     name: Build Release
@@ -48,6 +49,7 @@ jobs:
     #         build_target: ios
     steps:
       - run: echo Building for release.
+      - run: echo "${{needs.check-release.outputs.should-release}}"
       # TODO: Skip this for now but still run the job so we know that the if expression works
       - run: exit 1
       # 1. if 'android' setup java
