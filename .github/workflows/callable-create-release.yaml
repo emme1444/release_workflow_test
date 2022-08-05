@@ -25,7 +25,7 @@ jobs:
     # name: Build Release for ${{ matrix.name }}
     name: Build Release
     needs:
-      - check_release
+      - check-release
     # if: jobs.check-release.steps.check.outputs.should-release
     # if: jobs.check-release.outputs.should-release
     if: needs.check-release.outputs.should-release
