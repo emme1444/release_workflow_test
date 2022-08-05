@@ -1,0 +1,79 @@
+name: Run semantic-release
+description: Run semantic-release
+inputs:
+  pre-build:
+    # type: boolean
+    description: |
+      Wether to run semantic-release with only the `commit-analyzer` and `flutter` plugins.
+    required: true
+    default: false
+    # default: "false"
+  node-version:
+    description: Node.js version
+    required: true
+    default: "16"
+  semantic-release-version:
+    description: semantic-release version constraint
+    required: true
+    default: "~19.0.3"
+  changelog-version:
+    description: "@semantic-release/changelog version constraint"
+    required: true
+    default: "~6.0.1"
+  git-version:
+    description: "@semantic-release/git version constraint"
+    required: true
+    default: "~10.0.1"
+  flutter-version:
+    description: "semantic-release-flutter version constraint"
+    required: true
+    default: "~1.0.1"
+  conventionalcommits-version:
+    description: "conventional-changelog-conventionalcommits version constraint"
+    required: true
+    default: "~5.0.0"
+outputs:
+  should-release:
+    description: |
+      Wether semantic-release created, or would have created, a release.
+
+      Useful when `pre-build` is `true`.
+
+      If `pre-build` is not `true` this output is never set.
+    value: ${{ steps.check.outputs.should-release }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version: "16"
+    - name: Install semantic-release dependencies
+      if: "!inputs.pre-build"
+      shell: bash
+      run: npm install -g @semantic-release/changelog@${{ inputs.changelog-version }} @semantic-release/git@${{ inputs.git-version }} semantic-release-flutter@${{ inputs.flutter-version }} conventional-changelog-conventionalcommits@${{ inputs.conventionalcommits-version }}
+    - name: Install semantic-release dependencies (pre-build)
+      if: inputs.pre-build
+      shell: bash
+      run: npm install -g semantic-release-flutter@${{ inputs.flutter-version }}
+    - shell: bash
+      run: export NODE_PATH="$(npm root -g)"
+    - name: Create release
+      if: "!inputs.pre-build"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      # TODO: Remove the dry-run flag here!
+      run: npx semantic-release@${{ inputs.semantic-release-version }} -d
+    - name: Backup pubspec.yaml
+      if: inputs.pre-build
+      shell: bash
+      run: cp pubspec.yaml pubspec.bak.yaml
+    - name: Check release
+      if: inputs.pre-build
+      shell: bash
+      run: npx semantic-release@${{ inputs.semantic-release-version }} --plugins="@semantic-release/commit-analyzer,semantic-release-flutter"
+    - id: check
+      if: inputs.pre-build
+      shell: bash
+      # run: node tool/did-create-release.js
+      run: echo "::set-output name=should-release::$(node tool/did-create-release.js)"

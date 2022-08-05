@@ -1,6 +1,6 @@
 branches:
-  - stable
-  # - main
+  # - stable
+  - main
 
 #// TODO: UPDATE!
 repositoryUrl: https://github.com/emme1444/release_workflow_test

@@ -1,0 +1,26 @@
+name: Main - Test, Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    # TODO: CHANGE (remove redesign)
+    uses: ./.github/workflows/callable-test.yaml
+
+  build:
+    name: Build
+    # TODO: CHANGE (remove redesign)
+    uses: ./.github/workflows/callable-build.yaml
+
+  release:
+    name: Release
+    # TODO: removing this to speed up development
+    # needs:
+    #   - test
+    #   - build
+    # TODO: CHANGE (remove redesign)
+    uses: ./.github/workflows/callable-release.yaml

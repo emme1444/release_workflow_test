@@ -1,0 +1,70 @@
+# Create Release encompasses both building for release and releasing.
+name: Callable Create Release
+
+on:
+  workflow_call:
+
+jobs:
+  check-release:
+    # The idea here is to check for if there is about to create a release
+    name: Check if Release
+    # TODO: This could run on Linux maybe?
+    runs-on: macos-11
+    outputs:
+      should-release:
+        description: See semantic-release action (./.github/actions/semantic-release).
+        value: ${{ steps.run-semantic-release.outputs.should-release }}
+    steps:
+      - id: run-semantic-release
+        # TODO: change this path!
+        uses: ./.github/actions/run-semantic-release
+        with:
+          pre-build: true
+  build:
+    # name: Build Release for ${{ matrix.name }}
+    name: Build Release
+    needs:
+      - check_release
+    # if: jobs.check-release.steps.check.outputs.should-release
+    if: jobs.check-release.outputs.should-release
+    # TODO: This should run in a matrix
+    runs-on: macos-11
+    # strategy:
+    #   matrix:
+    #     includes:
+    #       - name: Android
+    #         target: android
+    #         # TODO: This might need a different command since release build
+    #         build_target: appbundle
+    #       - name: iOS
+    #         target: ios
+    #         # TODO: This might need a different command since release build
+    #         build_target: ios
+    steps:
+      - run: echo Building for release.
+      # TODO: Skip this for now but still run the job so we know that the if expression works
+      - run: exit 1
+      # 1. if 'android' setup java
+      # 2. setup flutter
+      # 3. setup node
+      # 4. setup semantic-release (deps)
+      # 5. run semantic-release with pre-build special config file and pipe to script to check if there was a version created
+      #    If semantic-release here didn't create a release I think the script would exit 1
+      #    If semantic-release here didn't create a release somehow subsequent steps should be skipped
+      # 6. run flutter build
+      # 7. publish artifact
+  release:
+    name: Release
+    needs:
+      - build
+    # if: jobs.build.output.should_release
+    # if: jobs.check_release.steps.<step-id>.output.should_release
+    # TODO: I wonder if because this depends on build if build is skipped this
+    #       is also automatically skipped without the below check?
+    # if: jobs.check-release.steps.check.outputs.should-release
+    if: jobs.check-release.outputs.should-release
+    runs-on: macos-11
+    steps:
+      - run: echo Releasing
+      # TODO: Skip this for now but still run the job so we know that the if expression works
+      - run: exit 1

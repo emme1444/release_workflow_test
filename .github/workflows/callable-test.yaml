@@ -1,0 +1,11 @@
+name: Callable Test
+
+on:
+  workflow_call:
+
+jobs:
+  unit_tests:
+    name: Unit Tests
+    runs-on: macos-11
+    steps:
+      - run: echo Testing

@@ -5,10 +5,12 @@ on:
     types:
       - published
 
+# TODO: Still unsure how we're gonna transfer the builds?
+#       Explore if we can use upload/download-artifact between workflows!
 jobs:
   publish:
     name: Publish
+    # TODO: I think this should run in a matrix
     runs-on: macos-11
-    # TODO: Should this run in a matrix? Can it?
     steps:
-      - run: echo Publishing v${{ github.event.release.tab_name }}
+      - run: echo Publishing v${{ github.event.release.tag_name }}
