@@ -27,6 +27,7 @@ jobs:
     needs:
       - check-release
     if: needs.check-release.outputs.should-release == 'true'
+    runs-on: macos-11
     strategy:
       fail-fast: false
       matrix:
