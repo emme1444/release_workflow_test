@@ -1,6 +1,10 @@
 name: Run semantic-release
 description: Run semantic-release
+
 inputs:
+  token:
+    description: GitHub token. Usually the `GITHUB_TOKEN` environment variable.
+    required: true
   pre-build:
     # type: boolean
     description: |
@@ -32,6 +36,7 @@ inputs:
     description: "conventional-changelog-conventionalcommits version constraint"
     required: true
     default: "~5.0.0"
+
 outputs:
   should-release:
     description: |
@@ -41,6 +46,7 @@ outputs:
 
       If `pre-build` is not `true` this output is never set.
     value: ${{ steps.check.outputs.should-release }}
+
 runs:
   using: composite
   steps:
@@ -60,7 +66,8 @@ runs:
     - name: Create release
       if: "!inputs.pre-build"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.token }}
       shell: bash
       # TODO: Remove the dry-run flag here!
       run: npx semantic-release@${{ inputs.semantic-release-version }} -d

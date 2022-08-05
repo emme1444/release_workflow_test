@@ -24,6 +24,7 @@ jobs:
         uses: ./.github/actions/run-semantic-release
         with:
           pre-build: true
+          token: ${{ secrets.GITHUB_TOKEN }}
   build:
     # name: Build Release for ${{ matrix.name }}
     name: Build Release
