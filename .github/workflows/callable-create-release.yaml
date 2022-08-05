@@ -11,9 +11,10 @@ jobs:
     # TODO: This could run on Linux maybe?
     runs-on: macos-11
     outputs:
-      should-release:
-        description: See semantic-release action (./.github/actions/semantic-release).
-        value: ${{ steps.run-semantic-release.outputs.should-release }}
+      # should-release:
+      #   description: See semantic-release action (./.github/actions/semantic-release).
+      #   value: ${{ steps.run-semantic-release.outputs.should-release }}
+      should-release: ${{ steps.run-semantic-release.outputs.should-release }}
     steps:
       - id: run-semantic-release
         # TODO: change this path!
