@@ -5,11 +5,6 @@ const pubspecPath = path.join(__dirname, "../pubspec.yaml");
 const pubspecBakPath = path.join(__dirname, "../pubspec.bak.yaml");
 
 (async () => {
-  // console.log("Hello, World!");
-
-  // process.stdout.write("false");
-  process.exit(1);
-
   const pubspecContents = fs.readFileSync(pubspecPath);
   const pubspecBakContents = fs.readFileSync(pubspecBakPath);
 
