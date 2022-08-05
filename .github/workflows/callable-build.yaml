@@ -22,4 +22,4 @@ jobs:
             target: ios
             build_target: ios --no-codesign
     steps:
-      - run: echo Building
+      - run: echo Building for ${{ matrix.name }}
