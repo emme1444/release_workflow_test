@@ -16,6 +16,9 @@ jobs:
       #   value: ${{ steps.run-semantic-release.outputs.should-release }}
       should-release: ${{ steps.run-semantic-release.outputs.should-release }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - id: run-semantic-release
         # TODO: change this path!
         uses: ./.github/actions/run-semantic-release
