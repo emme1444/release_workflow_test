@@ -26,7 +26,8 @@ jobs:
     needs:
       - check_release
     # if: jobs.check-release.steps.check.outputs.should-release
-    if: jobs.check-release.outputs.should-release
+    # if: jobs.check-release.outputs.should-release
+    if: needs.check-release.outputs.should-release
     # TODO: This should run in a matrix
     runs-on: macos-11
     # strategy:
@@ -62,7 +63,9 @@ jobs:
     # TODO: I wonder if because this depends on build if build is skipped this
     #       is also automatically skipped without the below check?
     # if: jobs.check-release.steps.check.outputs.should-release
-    if: jobs.check-release.outputs.should-release
+    # if: jobs.check-release.outputs.should-release
+    # TODO: For the below to work this also needs to depend on check-release
+    # if: needs.check-release.outputs.should-release
     runs-on: macos-11
     steps:
       - run: echo Releasing
