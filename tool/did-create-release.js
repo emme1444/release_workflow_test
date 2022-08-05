@@ -10,15 +10,9 @@ const pubspecBakPath = path.join(__dirname, "../pubspec.bak.yaml");
   // process.stdout.write("false");
   process.exit(1);
 
-  // 1. read `pubspec.yaml`
   const pubspecContents = fs.readFileSync(pubspecPath);
-
-  // 2. read `pubspec.bak.yaml`
   const pubspecBakContents = fs.readFileSync(pubspecBakPath);
 
-  // 3. extract version from each file contents
-  //    1. iterate through lines
-  //    2. extract version using regex `^version:\s*(\d+\.\d+\.\d+\+\d+)`
   /** @type {(contents: string) => string} */
   const extractVersion = (contents) => {
     const re = /^version:\s*(\d+\.\d+\.\d+\+\d+)/gm;
@@ -34,10 +28,8 @@ const pubspecBakPath = path.join(__dirname, "../pubspec.bak.yaml");
   const pubspecVersion = extractVersion(pubspecContents);
   const pubspecBakVersion = extractVersion(pubspecBakContents);
 
-  // 4. compare versions
   const checkResult = pubspecVersion !== pubspecBakVersion ? "true" : "false";
   // const checkResult = (pubspecVersion !== pubspecBakVersion).toString();
 
-  // 5. output true or false to stdout based on comparison
   process.stdout.write(checkResult);
 })();

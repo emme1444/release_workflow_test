@@ -86,6 +86,6 @@ runs:
       shell: bash
       # run: node tool/did-create-release.js
       run: |
-        export CHECK_RESULT=$(node tool/did-create-release.js)
-        # echo "::set-output name=should-release::$(node tool/did-create-release.js)"
-        echo "::set-output name=should-release::$CHECK_RESULT"
+        # Run this here so that if it fails (non-zero exit) it propagates up correctly
+        node tool/did-create-release.js
+        echo "::set-output name=should-release::$(node tool/did-create-release.js)"
